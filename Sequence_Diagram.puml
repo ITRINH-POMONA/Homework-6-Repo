@@ -6,11 +6,41 @@ participant "School Staff" as Staff
 participant "Payment Service" as Pay
 participant "Email Service" as Email
 Renter -> Website: submit request
+activate Website
 Website -> Staff: send request for review
 alt approved
-Staff --> Website: approved
-... add payment and confirmation ...
+    Staff --> Website: approved
+    deactivate Staff
+    Website --> Pay: charge renter
+    activate Pay
+    alt payment succeeds
+        Pay --> Website: payment succeeded
+        deactivate Pay 
+        Website -> Website: save booking
+        Website -> Email: send confirmation
+        activate Email
+        Email --> Renter: confirmation email
+        deactivate Email
+        Website --> Renter: booking confirmed
+    else payment fails
+        Pay --> Website: payment failed
+        deactivate Pay
+        Website -> Website: record payment failure
+        Website -> Email: send payment failure notice
+        activate Email
+        Email --> Renter: payment failure email
+        deactivate Email
+        Website --> Renter: payment failed
+    end
 else rejected
-Staff --> Website: rejected
+    Staff --> Website: rejected
+    deactivate Staff
+    Website -> Website: record rejection
+    Website -> Email: send rejection notice
+    activate Email
+    Email --> Renter: rejection email
+    deactivate Email
+    Website --> Renter: request rejected
 end
+deactivate Website
 @enduml

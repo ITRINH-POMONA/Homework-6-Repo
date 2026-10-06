@@ -1,0 +1,11 @@
+Assumptions:
+1. If a facility is unavailable, you are able to continually select a different date
+until there is availablity or if the user decides to stop (End 4)
+2. School staff only is able to review the request before payment attempt is made 
+and after the request is made by the website
+3. The website generates an email, in which it is then sent over to the email service
+to deliver to the renter.
+4. Sequence diagram starts assuming that the renter's request is available, meaning that
+the loop asking for a retry doesn't occur.
+5. A failed payment means that the system is complete; the renter does not have the
+ability to retry/change payment options and the request is denied.
